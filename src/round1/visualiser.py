@@ -24,13 +24,29 @@ for day in days:
     axes[0].plot(p['timestamp'], p['mid_price'], color=colors[day], linewidth=0.8, label=f'Day {day}')
     axes[1].plot(o['timestamp'], o['mid_price'], color=colors[day], linewidth=0.8, label=f'Day {day}')
 
-# Pepper: add linear trend per day
+# adding linear trend per day for pepper
 for day in days:
     p = pepper[pepper['day'] == day]
     x = p['timestamp'].values
     y = p['mid_price'].values
     coeffs = np.polyfit(x, y, 1)
     axes[0].plot(x, np.polyval(coeffs, x), color=colors[day], linewidth=2, linestyle='--')
+    print(f'Day {day} linear trend for pepper: slope={coeffs[0]:.5f}, intercept={coeffs[1]:.2f}')
+    for day in days:
+        p = pepper[pepper['day'] == day]
+        x = p['timestamp'].values
+        y = p['mid_price'].values
+        coeffs = np.polyfit(x, y, 1)
+        axes[0].plot(x, np.polyval(coeffs, x), color=colors[day], linewidth=2, linestyle='--')
+        
+        fair_value = np.polyval(coeffs, x)
+        residuals = y - fair_value
+        print(f"Day {day}:")
+        print(f"  Slope:        {coeffs[0]:.5f}")
+        print(f"  Intercept:    {coeffs[1]:.2f}")
+        print(f"  Residual std: {residuals.std():.4f}")
+        print(f"  Residuals:    min={residuals.min():.2f}, max={residuals.max():.2f}")
+        print()
 
 
 axes[1].axhline(10000, color='red', linewidth=1.5, linestyle='--', label='Fair value (10000)')
