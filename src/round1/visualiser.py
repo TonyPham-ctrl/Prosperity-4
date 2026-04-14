@@ -2,11 +2,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-days = [0]
+days = [-2, -1 , 0]
 
 dfs = []
 for day in days:
-    df = pd.read_csv(f'data/round_1/prices_round_1_day_{day}.csv', sep=';')
+    df = pd.read_csv(f'../../data/round_1/prices_round_1_day_{day}.csv', sep=';')
     df['day'] = day
     dfs.append(df)
 prices = pd.concat(dfs, ignore_index=True)
